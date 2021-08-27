@@ -19,16 +19,24 @@ namespace pruebaclase.Models
             using(MySqlConnection conn = new MySqlConnection(ConnectionString))
             {
                 string sql = @"SELECT Id, Nombre, Telefono FROM Persona";
-                using (MySqlCommand conn = new MySqlCommand(sql, conn))
+                using (MySqlCommand comm = new MySqlCommand(sql, conn))
                 {
                     conn.Open();
-                    var reader = conn.ExecuteReader();
+                    var reader = comm.ExecuteReader();
                     while(reader.Read())
                     {
-                        
+                        var p = new Persona
+                        {
+                            Id = Convert.ToInt32(reader[nameof(Persona.Id)]),
+                            Nombre = reader[nameof(Persona.Nombre)].ToString(),
+                            Telefono = reader[nameof(Persona.Telefono)].ToString(), 
+                        };
+                        res.Add(p);
                     }
+                    conn.Close();
                 }
             }
+            return res;
         }
     }
 }
